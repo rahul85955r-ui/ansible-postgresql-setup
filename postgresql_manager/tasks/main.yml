@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT-0
 ---
 # Tasks file for PostgreSQL_Manager
+
 - name: Install PostgreSQL on Debian
   ansible.builtin.apt:
     name: "postgresql-{{ postgresql_version }}"
