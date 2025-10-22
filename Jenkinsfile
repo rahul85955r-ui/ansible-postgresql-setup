@@ -5,66 +5,88 @@ pipeline {
         ANSIBLE_PLAYBOOK = "site.yml"
         ANSIBLE_INVENTORY = "postgresql_manager/tests/inventory"
         EMAIL_RECIPIENTS = "rahul85955r@gmail.com"   // Change to your team emails
-        SLACK_CHANNEL = "#jenkins-notify"           // Change to your Slack channel
-        VENV_PATH = "/var/lib/jenkins/molecule-venv"
+        SLACK_CHANNEL = "#jenkins-notify"          // Change to your Slack channel
+        VENV_PATH = "${WORKSPACE}/molecule-venv"
     }
 
     stages {
+        stage('Checkout Code') {
+            steps {
+                echo "📦 Checking out code from GitHub..."
+                checkout scm
+            }
+        }
+
         stage('Setup Environment') {
             steps {
-                sh '''
-                    echo "⚙️ Setting up virtual environment..."
-                    [ ! -d ${VENV_PATH} ] && python3 -m venv ${VENV_PATH}
-                    . ${VENV_PATH}/bin/activate
-                    pip install --upgrade pip
-                    pip install ansible molecule ansible-lint docker
-                '''
+                echo "⚙️ Setting up virtual environment..."
+                sh """
+                if [ ! -d ${VENV_PATH} ]; then
+                    python3 -m venv ${VENV_PATH}
+                fi
+                . ${VENV_PATH}/bin/activate
+                pip install --upgrade pip
+                pip install ansible molecule ansible-lint docker
+                """
             }
         }
 
         stage('Ansible Lint Check') {
             steps {
                 echo "🧹 Running Ansible Lint..."
-                sh "${VENV_PATH}/bin/ansible-lint ${ANSIBLE_PLAYBOOK}"
+                sh """
+                . ${VENV_PATH}/bin/activate
+                ansible-lint ${ANSIBLE_PLAYBOOK}
+                """
             }
         }
 
-        stage('Molecule Test') {
+        stage('Molecule Role Test') {
             steps {
                 echo "🧩 Running Molecule tests..."
-                sh '''
-                    . ${VENV_PATH}/bin/activate
-                    cd ~/ansible-postgresql-setup/postgresql_manager
-                    molecule test
-                '''
+                sh """
+                . ${VENV_PATH}/bin/activate
+                cd ${WORKSPACE}/ansible-postgresql-setup/postgresql_manager
+                molecule test
+                """
             }
         }
 
         stage('Dry Run (Test Mode)') {
             steps {
                 echo "🧪 Running dry-run test..."
-                sh "${VENV_PATH}/bin/ansible-playbook ${ANSIBLE_PLAYBOOK} -i ${ANSIBLE_INVENTORY} --check"
+                sh """
+                . ${VENV_PATH}/bin/activate
+                ansible-playbook ${ANSIBLE_PLAYBOOK} -i ${ANSIBLE_INVENTORY} --check
+                """
             }
         }
 
         stage('Deploy PostgreSQL') {
             steps {
                 echo "🚀 Deploying PostgreSQL..."
-                sh "${VENV_PATH}/bin/ansible-playbook ${ANSIBLE_PLAYBOOK} -i ${ANSIBLE_INVENTORY}"
+                sh """
+                . ${VENV_PATH}/bin/activate
+                ansible-playbook ${ANSIBLE_PLAYBOOK} -i ${ANSIBLE_INVENTORY}
+                """
             }
         }
 
         stage('PostgreSQL Health Check') {
             steps {
                 echo "💚 Checking PostgreSQL service status..."
-                sh "${VENV_PATH}/bin/ansible all -i ${ANSIBLE_INVENTORY} -m shell -a 'systemctl status postgresql | grep active'"
+                sh """
+                ansible all -i ${ANSIBLE_INVENTORY} -m shell -a 'systemctl status postgresql | grep active'
+                """
             }
         }
 
         stage('Database Connectivity Test') {
             steps {
                 echo "🔗 Testing database connection..."
-                sh "${VENV_PATH}/bin/ansible all -i ${ANSIBLE_INVENTORY} -m shell -a 'psql -U postgres -c \"SELECT version();\"'"
+                sh """
+                ansible all -i ${ANSIBLE_INVENTORY} -m shell -a 'psql -U postgres -c "SELECT version();"'
+                """
             }
         }
     }
