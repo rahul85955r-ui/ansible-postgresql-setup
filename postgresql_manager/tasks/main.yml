@@ -1,19 +1,19 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
-# tasks file for postgresql_manager
+# Tasks file for PostgreSQL_Manager
 - name: Install PostgreSQL on Debian
-  apt:
+  ansible.builtin.apt:
     name: "postgresql-{{ postgresql_version }}"
     state: present
   when: ansible_os_family == "Debian"
 
 - name: Install PostgreSQL on RedHat
-  yum:
+  ansible.builtin.yum:
     name: "postgresql{{ postgresql_version }}"
     state: present
   when: ansible_os_family == "RedHat"
 
 - name: Ensure PostgreSQL service is enabled
-  service:
+  ansible.builtin.service:
     name: "{{ postgresql_service }}"
     enabled: true
