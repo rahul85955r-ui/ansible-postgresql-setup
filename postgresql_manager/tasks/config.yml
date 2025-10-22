@@ -1,3 +1,4 @@
+# Tasks for deploying PostgreSQL configuration files
 - name: Deploy PostgreSQL.conf
   ansible.builtin.template:
     src: postgresql.conf.j2
