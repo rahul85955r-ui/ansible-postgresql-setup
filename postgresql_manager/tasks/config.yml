@@ -7,7 +7,7 @@
     group: postgres
     mode: '0644'
   notify: Restart PostgreSQL
-
+  
 - name: Deploy Pg_hba.conf
   ansible.builtin.template:
     src: pg_hba.conf.j2
@@ -16,5 +16,3 @@
     group: postgres
     mode: '0640'
   notify: Restart PostgreSQL
-
-
