@@ -1,8 +1,8 @@
-#SPDX-License-Identifier: MIT-0
+# Handlers file for PostgreSQL_Manager
 ---
-# handlers file for postgresql_manager
 - name: Restart PostgreSQL
   ansible.builtin.service:
     name: postgresql
     state: restarted
+
 
