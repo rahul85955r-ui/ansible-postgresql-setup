@@ -1,4 +1,5 @@
-- hosts: all
-  become: true
+- name: Setup PostgreSQL Server
+  hosts: all
+  become: yes
   roles:
-    - role: postgresql_manager
+    - postgresql_manager
