@@ -1,6 +1,8 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
-- hosts: localhost
+- name: Setup PostgreSQL using postgresql_manager role
+  hosts: localhost
   remote_user: root
   roles:
     - postgresql_manager
+
