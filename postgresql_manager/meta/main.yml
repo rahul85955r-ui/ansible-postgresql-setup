@@ -3,7 +3,7 @@ galaxy_info:
   author: Rahul Sharma
   company: Personal
   license: MIT
-  min_ansible_version: 2.1
+  min_ansible_version: "2.1"
   description: Role to setup PostgreSQL server
   galaxy_tags: []
 
