@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for postgresql_manager
+postgresql_version: 14
+postgresql_service: postgresql
+postgresql_conf_file: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+pg_hba_conf_file: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
