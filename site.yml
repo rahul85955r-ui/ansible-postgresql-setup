@@ -1,5 +1,7 @@
-- name: Setup PostgreSQL Server
-  hosts: all
-  become: yes
+# SPDX-License-Identifier: MIT-0
+---
+- hosts: localhost
+  remote_user: root
+  become: true   # lowercase, without quotes
   roles:
     - postgresql_manager
