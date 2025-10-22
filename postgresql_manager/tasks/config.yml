@@ -1,5 +1,8 @@
-# Tasks for deploying PostgreSQL configuration files
-- name: Deploy PostgreSQL.conf
+# SPDX-License-Identifier: MIT-0
+---
+# Configuration tasks for PostgreSQL_Manager
+
+- name: Deploy postgresql.conf
   ansible.builtin.template:
     src: postgresql.conf.j2
     dest: "{{ postgresql_conf_file }}"
@@ -7,8 +10,8 @@
     group: postgres
     mode: '0644'
   notify: Restart PostgreSQL
-  
-- name: Deploy Pg_hba.conf
+
+- name: Deploy pg_hba.conf
   ansible.builtin.template:
     src: pg_hba.conf.j2
     dest: "{{ pg_hba_conf_file }}"
