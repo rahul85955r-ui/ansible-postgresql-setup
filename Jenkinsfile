@@ -41,17 +41,16 @@ pipeline {
             }
         }
 
-        stage('Molecule Role Test') {
-            steps {
-                echo "🧩 Running Molecule tests..."
-                sh """
-                . ${VENV_PATH}/bin/activate
-                cd ${WORKSPACE}/ansible-postgresql-setup/postgresql_manager
-                molecule test
-                """
-            }
-        }
-
+       stage('Molecule Role Test') {
+    steps {
+        echo "🧩 Running Molecule tests..."
+        sh """
+        . ${VENV_PATH}/bin/activate
+        cd ${WORKSPACE}
+        molecule test
+        """
+    }
+}
         stage('Dry Run (Test Mode)') {
             steps {
                 echo "🧪 Running dry-run test..."
